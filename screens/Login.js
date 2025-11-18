@@ -33,7 +33,7 @@ export default function Login({ navigation }) {
                 },
                 body: JSON.stringify({
                     email: email,
-                    senha: hashPassword(password)
+                    password: hashPassword(password)
                 }),
             });
 
