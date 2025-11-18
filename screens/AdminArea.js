@@ -26,7 +26,7 @@ export default function Home({ navigation, route }) {
         setRespostaApi('');
 
         try {
-            const response = await fetch("https://localhost:8080/x/xt", {
+            const response = await fetch("https://localhost:8080/user", {
                 method: "DELETE",
                 headers: {
                     "userEmail": email,

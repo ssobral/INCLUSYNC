@@ -48,7 +48,7 @@ export default function Cadastro({ navigation }) {
         };
 
         try {
-            const response = await fetch("https://localhost:8080/x/x", {
+            const response = await fetch("https://localhost:8080/user/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

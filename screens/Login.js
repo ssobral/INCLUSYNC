@@ -15,48 +15,52 @@ export default function Login({ navigation }) {
         return SHA256(password).toString(encHex);
     }
 
-    // async function handleSubmit() {
-    //     setError('');
-
-    //     if (!user.trim() || !password.trim()) {
-    //         setError('Preencha usuário e senha');
-    //         return;
-    //     }
-
-    //     try {
-    //         const response = await fetch('https://localhost:8080/x/x', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({
-    //                 email: user,
-    //                 senha: hashPassword(password)
-    //             }),
-    //         });
-
-    //         const data = await response.json();
-
-    //         if (data.code === 200) {
-    //             navigation.navigate('Home', { email,acess: data.access });
-    //         } else {
-    //             setError('Usuário ou senha inválidos');
-    //         }
-
-    //     } catch (e) {
-    //         console.error(e);
-    //         setError('Erro ao conectar à API');
-    //     }
-    // }
-
-    function handleSubmit() {
+    async function handleSubmit() {
         setError('');
+
         if (!email.trim() || !password.trim()) {
             setError('Preencha usuário e senha');
             return;
         }
-        navigation.navigate('Home', { email });
+
+        console.log("Vai tentar conectar");
+
+        try {
+            const response = await fetch('http://localhost:8080/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    senha: hashPassword(password)
+                }),
+            });
+
+            console.log("oi");
+
+            const data = await response.json();
+
+            if (data.code === 200) {
+                navigation.navigate('Home', { email,acess: data.access });
+            } else {
+                setError('Usuário ou senha inválidos');
+            }
+
+        } catch (e) {
+            console.error(e);
+            setError('Erro ao conectar à API');
+        }
     }
+
+    // function handleSubmit() {
+    //     setError('');
+    //     if (!email.trim() || !password.trim()) {
+    //         setError('Preencha usuário e senha');
+    //         return;
+    //     }
+    //     navigation.navigate('Home', { email });
+    // }
 
 
     const gradientColors = ['#a8c0ff', '#eef3ff', '#ffffff'];
