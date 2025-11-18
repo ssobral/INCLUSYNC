@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import LogoImage from '../assets/Logo Completo.png';
+import SHA256 from 'crypto-js/sha256';
+import encHex from 'crypto-js/enc-hex';
 
 export default function Login({ navigation }) {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+
+    function hashPassword(password) {
+        return SHA256(password).toString(encHex);
+    }
 
     // async function handleSubmit() {
     //     setError('');
@@ -25,14 +31,14 @@ export default function Login({ navigation }) {
     //             },
     //             body: JSON.stringify({
     //                 email: user,
-    //                 senha: password
+    //                 senha: hashPassword(password)
     //             }),
     //         });
 
     //         const data = await response.json();
 
     //         if (data.code === 200) {
-    //             navigation.navigate('Home', { email });
+    //             navigation.navigate('Home', { email,acess: data.access });
     //         } else {
     //             setError('Usuário ou senha inválidos');
     //         }
@@ -91,6 +97,13 @@ export default function Login({ navigation }) {
                     />
 
                     {error ? <Text style={styles.error}>{error}</Text> : null}
+
+                    <TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
+                        <Text style={styles.linkText}>
+                            Não possui conta? <Text style={styles.linkHighlight}>Clique aqui!</Text>
+                        </Text>
+                    </TouchableOpacity>
+
 
                     <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                         <Text style={styles.buttonText}>Entrar</Text>
@@ -168,5 +181,16 @@ const styles = StyleSheet.create({
     },
     logoCard: {
         alignItems: "center"
+    },
+    linkText: {
+        textAlign: "center",
+        color: "#444",
+        marginTop: 10,
+        marginBottom: 10
+    },
+    linkHighlight: {
+        color: "#004987",
+        fontWeight: "bold",
+        textDecorationLine: "underline"
     }
 });
