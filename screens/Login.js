@@ -23,8 +23,6 @@ export default function Login({ navigation }) {
             return;
         }
 
-        console.log("Vai tentar conectar");
-
         try {
             const response = await fetch('http://localhost:8080/auth/login', {
                 method: 'POST',
@@ -37,12 +35,10 @@ export default function Login({ navigation }) {
                 }),
             });
 
-            console.log("oi");
-
             const data = await response.json();
 
             if (data.code === 200) {
-                navigation.navigate('Home', { email,acess: data.access });
+                navigation.navigate('Home', { email,access: data.access });
             } else {
                 setError('Usuário ou senha inválidos');
             }
@@ -52,16 +48,6 @@ export default function Login({ navigation }) {
             setError('Erro ao conectar à API');
         }
     }
-
-    // function handleSubmit() {
-    //     setError('');
-    //     if (!email.trim() || !password.trim()) {
-    //         setError('Preencha usuário e senha');
-    //         return;
-    //     }
-    //     navigation.navigate('Home', { email });
-    // }
-
 
     const gradientColors = ['#a8c0ff', '#eef3ff', '#ffffff'];
 

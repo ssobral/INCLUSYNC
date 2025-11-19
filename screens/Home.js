@@ -7,8 +7,8 @@ import Logo from '../assets/Logo.png'
 export default function Home({ navigation, route }) {
 
     const email = route?.params?.email ?? null;
-    //const access = route?.params?.access ?? null;
-    const access = "admin";
+    const access = route?.params?.access ?? null;
+    //const access = "admin";
 
     function logout() {
         navigation.navigate('Login');
@@ -30,7 +30,7 @@ export default function Home({ navigation, route }) {
         setRespostaApi("");
 
         try {
-            const response = await fetch("https://localhost:8080/x/xt", {
+            const response = await fetch("http://localhost:8080/x/xt", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export default function Home({ navigation, route }) {
                 <TextInput style={styles.textarea} multiline editable={false} value={respostaApi} />
 
                 {access === "admin" && (
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AdminArea', {email})}>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AdminArea', {email, access})}>
                         <Text style={styles.buttonText}>Área do Admin</Text>
                     </TouchableOpacity>
                 )}

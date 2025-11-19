@@ -7,10 +7,6 @@ export default function Home({ navigation, route }) {
 
     const adminEmail = route?.params?.email ?? null;
 
-    function logout() {
-        navigation.navigate('Login');
-    }
-
     const [email, setEmail] = useState('');
     const [erro, setErro] = useState('');
     const [respostaApi, setRespostaApi] = useState('');
@@ -26,7 +22,7 @@ export default function Home({ navigation, route }) {
         setRespostaApi('');
 
         try {
-            const response = await fetch("https://localhost:8080/user", {
+            const response = await fetch("http://localhost:8080/user", {
                 method: "DELETE",
                 headers: {
                     "userEmail": email,
@@ -34,20 +30,25 @@ export default function Home({ navigation, route }) {
                 }
             });
 
-            const data = await response.json();
-
             setRespostaApi("Usuário excluído com sucesso.");
+            setEmail("");
 
         } catch (error) {
             setRespostaApi("Erro ao enviar requisição: " + error.message);
         }
     }
 
+    function returnToHome() {
+        var email = adminEmail;
+        const access = route?.params?.access ?? null;
+        navigation.navigate('Home', { email, access });
+    }
+
     return (
         <View style={styles.container}>
 
             <View style={styles.navBar}>
-                <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('Home')}>
+                <TouchableOpacity style={styles.logoutButton} onPress={returnToHome}>
                     <Text style={styles.logoutText}>Voltar</Text>
                 </TouchableOpacity>
             </View>

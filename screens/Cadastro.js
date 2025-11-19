@@ -12,27 +12,33 @@ import {
 import CheckBox from 'expo-checkbox';
 import { LinearGradient } from 'expo-linear-gradient';
 import LogoImage from '../assets/Logo Completo.png';
+import SHA256 from 'crypto-js/sha256';
+import encHex from 'crypto-js/enc-hex';
 
 export default function Cadastro({ navigation }) {
 
-    const [nome, setNome] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
+    const [password, setPassword] = useState('');
     const [confirmSenha, setConfirmSenha] = useState('');
     const [deficiencia, setDeficiencia] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
+    function hashPassword(password) {
+        return SHA256(password).toString(encHex);
+    }
+
     async function handleSubmit() {
         setError('');
         setSuccess('');
 
-        if (!nome.trim() || !email.trim() || !senha.trim() || !confirmSenha.trim()) {
+        if (!username.trim() || !email.trim() || !password.trim() || !confirmSenha.trim()) {
             setError('Preencha todos os campos.');
             return;
         }
 
-        if (senha !== confirmSenha) {
+        if (password !== confirmSenha) {
             setError('As senhas não coincidem.');
             return;
         }
@@ -40,15 +46,15 @@ export default function Cadastro({ navigation }) {
         const access = "user";
 
         const body = {
-            nome,
+            username,
             email,
-            senha,
-            possuiDeficienciaMobilidade: deficiencia,
+            password: hashPassword(password),
+            hasMobilityIssue: deficiencia,
             access
         };
 
         try {
-            const response = await fetch("https://localhost:8080/user/signup", {
+            const response = await fetch("http://localhost:8080/user/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -60,7 +66,7 @@ export default function Cadastro({ navigation }) {
 
             if (response.ok) {
                 setSuccess("Cadastro realizado com sucesso!");
-                setTimeout(() => navigation.navigate("Login"), 1500);
+                setTimeout(() => navigation.navigate("Home"), 1500);
             } else {
                 setError(data.message || "Erro ao cadastrar.");
             }
@@ -91,8 +97,8 @@ export default function Cadastro({ navigation }) {
 
                     <Text style={styles.label}>Nome:</Text>
                     <TextInput
-                        value={nome}
-                        onChangeText={setNome}
+                        value={username}
+                        onChangeText={setUsername}
                         style={styles.input}
                         placeholderTextColor="#888"
                     />
@@ -108,8 +114,8 @@ export default function Cadastro({ navigation }) {
 
                     <Text style={styles.label}>Senha:</Text>
                     <TextInput
-                        value={senha}
-                        onChangeText={setSenha}
+                        value={password}
+                        onChangeText={setPassword}
                         secureTextEntry
                         style={styles.input}
                         placeholderTextColor="#888"
