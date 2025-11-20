@@ -13,6 +13,10 @@ export default function Home({ navigation, route }) {
 
     async function handleSubmit() {
 
+        if (adminEmail === null) {
+            navigation.navigate('Login');
+        }
+
         if (!email) {
             setErro('Digite o e-mail.');
             return;

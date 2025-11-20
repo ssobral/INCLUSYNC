@@ -8,7 +8,8 @@ export default function Home({ navigation, route }) {
 
     const email = route?.params?.email ?? null;
     const access = route?.params?.access ?? null;
-    //const access = "admin";
+
+
 
     function logout() {
         navigation.navigate('Login');
@@ -19,7 +20,12 @@ export default function Home({ navigation, route }) {
     const [respostaApi, setRespostaApi] = useState("");
     const [erro, setErro] = useState('');
 
+
     async function handleSubmit() {
+
+        if (email === null){
+            navigation.navigate('Login');
+        }
 
         if (!startAdd || !endAdd) {
             setErro('Preencha todos os campos!');
@@ -30,7 +36,7 @@ export default function Home({ navigation, route }) {
         setRespostaApi("");
 
         try {
-            const response = await fetch("http://localhost:8080/x/xt", {
+            const response = await fetch("http://localhost:8080/direction", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -44,7 +50,7 @@ export default function Home({ navigation, route }) {
 
             const data = await response.json();
 
-            setRespostaApi(JSON.stringify(data, null, 2));
+            setRespostaApi(data.message);
 
         } catch (error) {
             setRespostaApi("Erro ao enviar requisição: " + error.message);
@@ -68,6 +74,14 @@ export default function Home({ navigation, route }) {
             </View>
 
             <View style={styles.form}>
+
+                {access === "admin" && (
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AdminArea', { email, access })}>
+                        <Text style={styles.buttonText}>Área do Admin</Text>
+                    </TouchableOpacity>
+                )}
+
+
                 <Text style={styles.formTitle}>Preencha o formulário para receber a rota mais adequada à você!</Text>
 
                 <Text style={styles.formLabel}>Endereço de partida:</Text>
@@ -80,13 +94,17 @@ export default function Home({ navigation, route }) {
                     <Text style={styles.buttonText}>Enviar</Text>
                 </TouchableOpacity>
 
-                <TextInput style={styles.textarea} multiline editable={false} value={respostaApi} />
+                <TextInput
+                    style={styles.textarea}
+                    multiline
+                    editable={false}
+                    value={typeof respostaApi === "string" ? respostaApi : JSON.stringify(respostaApi, null, 2)}
+                    placeholder="A melhor rota será exibida aqui."
+                    textAlignVertical="top"
+                />
 
-                {access === "admin" && (
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AdminArea', {email, access})}>
-                        <Text style={styles.buttonText}>Área do Admin</Text>
-                    </TouchableOpacity>
-                )}
+
+
             </View>
 
 
@@ -155,7 +173,8 @@ const styles = StyleSheet.create({
     },
     formTitle: {
         textAlign: 'center',
-        marginBottom: 20
+        marginBottom: 20,
+        marginTop: 20
     },
     formLabel: {
         fontSize: 14,
@@ -174,5 +193,15 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 12,
         marginBottom: 12,
+    },
+    textarea: {
+        borderWidth: 1,
+        borderColor: '#e6e9ef',
+        borderRadius: 8,
+        padding: 12,
+        marginTop: 20,
+        textAlignVertical: "top",
+        height: 400,
     }
+
 });
